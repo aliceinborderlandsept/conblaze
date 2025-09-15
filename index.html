@@ -1,102 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script type="text/javascript">
+<script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "tb6wdd234y");
 </script>
-  <meta charset="UTF-8">
-  <title>Colnbaze Game</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SPX Notification</title>
   <style>
-    body { display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f0f0f0; }
-    canvas { border: 2px solid black; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      padding: 12px;
+      animation: slideIn 0.6s ease-out;
+      z-index: 9999;
+      max-width: 320px;
+      cursor: pointer; /* pointer cursor on hover */
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(120%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .notification img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 26px;
+      text-align: center;
+    }
+
+    @media (max-width: 420px) {
+      .notification {
+        left: 10px;
+        right: 10px;
+        max-width: unset;
+      }
+    }
   </style>
 </head>
 <body>
-<script>
-let player;
-let coins = [];
-let walls = [];
-let score = 0;
 
-function setup() {
-  createCanvas(400, 400);
-  player = { x: 20, y: 20, size: 20 };
-  // Create coins
-  coins.push({ x: 100, y: 100, collected: false });
-  coins.push({ x: 300, y: 300, collected: false });
-  coins.push({ x: 200, y: 50, collected: false });
-  // Create walls (maze)
-  walls.push({ x: 50, y: 50, w: 300, h: 20 });
-  walls.push({ x: 50, y: 150, w: 20, h: 200 });
-  walls.push({ x: 330, y: 150, w: 20, h: 200 });
-  walls.push({ x: 50, y: 330, w: 280, h: 20 });
-}
+  <!-- Notification -->
+  <div class="notification" id="spxNotification" onclick="redirectToFB()">
+    <button class="close-btn" onclick="event.stopPropagation(); closeNotif()">×</button>
+    <img src="https://1992gameofthrone1992.github.io/imagetopa/spx.jpeg" alt="SPX" />
+  </div>
 
-function draw() {
-  background(220);
-  // Draw player
-  fill(0, 0, 255);
-  ellipse(player.x, player.y, player.size);
-  // Draw coins
-  fill(255, 215, 0);
-  for (let coin of coins) {
-    if (!coin.collected) {
-      ellipse(coin.x, coin.y, 10);
+  <script>
+    function closeNotif() {
+      const n = document.getElementById("spxNotification");
+      n.style.transform = 'translateX(120%)';
+      n.style.opacity = '0';
+      setTimeout(()=> n.remove(), 400);
     }
-  }
-  // Draw walls
-  fill(100);
-  for (let wall of walls) {
-    rect(wall.x, wall.y, wall.w, wall.h);
-  }
-  // Display score
-  textSize(20);
-  fill(0);
-  text(`Score: ${score}`, 10, 20);
-  // Check coin collection
-  for (let coin of coins) {
-    if (!coin.collected && dist(player.x, player.y, coin.x, coin.y) < player.size / 2 + 5) {
-      coin.collected = true;
-      score += 1;
-    }
-  }
-  // Check win condition
-  if (score === coins.length) {
-    textSize(32);
-    fill(0, 255, 0);
-    textAlign(CENTER);
-    text("You Win!", width / 2, height / 2);
-    noLoop();
-  }
-}
 
-function keyPressed() {
-  let newX = player.x;
-  let newY = player.y;
-  if (keyCode === LEFT_ARROW) newX -= 10;
-  if (keyCode === RIGHT_ARROW) newX += 10;
-  if (keyCode === UP_ARROW) newY -= 10;
-  if (keyCode === DOWN_ARROW) newY += 10;
-  // Check collision with walls
-  let collision = false;
-  for (let wall of walls) {
-    if (newX + player.size / 2 > wall.x && newX - player.size / 2 < wall.x + wall.w &&
-        newY + player.size / 2 > wall.y && newY - player.size / 2 < wall.y + wall.h) {
-      collision = true;
+    function redirectToFB() {
+      window.location.href = "https://conblaze.pages.dev/blog";
     }
-  }
-  // Update position if no collision
-  if (!collision && newX > player.size / 2 && newX < width - player.size / 2 &&
-      newY > player.size / 2 && newY < height - player.size / 2) {
-    player.x = newX;
-    player.y = newY;
-  }
-}
-</script>
+  </script>
+
 </body>
 </html>
